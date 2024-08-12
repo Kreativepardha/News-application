@@ -1,4 +1,5 @@
 import { Prisma } from "../DB/dbConfig";
+import { imageValidator } from "../utils/helper";
 
 
 export const getUser = async (req:any, res:any) =>{
@@ -32,4 +33,24 @@ export const getUser = async (req:any, res:any) =>{
         });
     }
 
+}
+
+export const updateUser = async (req:any, res: any) => {
+    const { id } = req.params
+    const authUser = req.user
+
+    if(!req.files || Object.keys(req.files).length === 0 ){
+        return res.status(400).json({
+            message:"Profile image is required"
+        })
+    }
+    const profile = req.files.profile
+    const message = imageValidator(profile?.size , profile.mimetype)
+    if(message !== null) {
+        return res.status(400).json({
+            errors: {
+                profile: message
+            }
+        })
+    }
 }
