@@ -8,6 +8,7 @@ export const authMiddleware = ( req:any, res:any, next:any ) =>{
         }
 
         const token  = authHeader.split(` `)[1];
+        if (token == null) return res.status(401).json({ message: 'Unauthorized' });
     if(!token)  return res.status(401).json({ message: "User is not authenticated"  })
 
         try {
