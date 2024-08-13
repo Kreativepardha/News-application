@@ -1,5 +1,5 @@
 import { Prisma } from "../DB/dbConfig";
-import { imageValidator } from "../utils/helper";
+import { generateRandomNum, imageValidator, getImageUrl } from "../utils/helper";
 
 
 export const getUser = async (req:any, res:any) =>{
@@ -35,7 +35,9 @@ export const getUser = async (req:any, res:any) =>{
 
 }
 
-export const updateUser = async (req:any, res: any) => {
+
+//updating profile picture 
+export const updateProfile = async (req:any, res: any) => {
     const { id } = req.params
     const authUser = req.user
 
@@ -45,6 +47,8 @@ export const updateUser = async (req:any, res: any) => {
         })
     }
     const profile = req.files.profile
+
+    //image validation
     const message = imageValidator(profile?.size , profile.mimetype)
     if(message !== null) {
         return res.status(400).json({
@@ -53,4 +57,41 @@ export const updateUser = async (req:any, res: any) => {
             }
         })
     }
+
+    //generate image name and set upload path
+    const imgExt = profile?.name.split(".")
+    const imageName = generateRandomNum() + "." + imgExt[1];
+    const uploadPath = process.cwd() + "/public/images/" + imageName;
+
+    //moving file to specifed public folder in Backend folder
+    profile.mv(uploadPath , (err:any) => {
+        console.log("image error:", err)
+    })
+
+    try {
+        //stroing in useer profile pic database
+        await Prisma.users.update({
+            data:{
+                profile: imageName,
+            },
+            where:{
+                id:Number(id)
+            }
+        })
+    
+        return res.json({
+            message:"Profile updates successfully",
+            profileImageUrl: getImageUrl(imageName)
+        })
+
+
+    } catch (err) {
+        console.error("Database update error:", err);
+        return res.status(500).json({
+            message: "Failed to update profile"
+        });
+    }
+   
+
+
 }

@@ -1,10 +1,10 @@
 import express from 'express'
-import { getUser, updateUser } from '../controllers/userController'
+import { getUser, updateProfile } from '../controllers/userController'
 
 const router = express.Router()
 
 router.get("/", getUser)
-router.put("/", updateUser)
+router.put("/:id", updateProfile)
 
 export {
     router as userRouter
