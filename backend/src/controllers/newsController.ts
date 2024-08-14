@@ -1,4 +1,4 @@
-import { newsTransform } from "../../transform/newsTransform.ts";
+import { newsTransform } from "../../transform/newsTransform";
 import { Prisma } from "../DB/dbConfig";
 import { generateRandomNum, getImageUrl, imageValidator } from "../utils/helper";
 import { newsBody } from "../validations/newsValidation"
@@ -57,12 +57,6 @@ export const createNews = async (req:any, res:any) => {
                 });   
         }
 
-
-
-
-
-
-
         } catch (err) {
             
         }
@@ -107,16 +101,48 @@ export const getNews = async (req:any, res:any) => {
 
 export const getAllNews = async (req:any, res:any) => {
     try {
+        const page = Number (req.query.page) || 1
+        const limit = Number(req.query.limit )|| 1
+
+            if(page <= 0 ){
+                page = 1
+            }
+            if(limit <= 0 || limit > 100) {
+                limit = 10
+            }
+
+            const skip = (page - 1) * limit
+
+
         const news = await Prisma.news.findMany({
-                //pagination
+            take:limit,
+            skip:skip,
+                include: {
+                    user:{
+                        select:{
+                            id:true,
+                            name:true,
+                            profile:true,
+                        }
+                    }
+                }
         })
+        const total = await Prisma.news.count()
 
         return res.json({
             news: news.map(n =>( {
                 ...newsTransform(n),
                  imageUrl: getImageUrl(n.image)
-            }))
+            })),
+            pagination: {
+                totalItems: total,
+                totalPages: Math.ceil(total / limit)
+                currentPage: page,
+                pageSize: limit,
+            }
         })
+
+
     } catch (err) {
         console.error("Error fetching all news:", err);
         return res.status(500).json({
@@ -214,10 +240,14 @@ export const updateNews = async (req: any, res: any) => {
                 data: updates,
             });
 
+                //changing format of news
+            const transformedNews = news ? newsTransform(news) : null;
+
+
             return res.json({
                 message: "News updated successfully",
-                news: news,
-                imageUrl: getImageUrl(news.image)
+                news: transformedNews,
+                // imageUrl: getImageUrl(news.image)
             });
         }
 
