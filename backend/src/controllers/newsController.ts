@@ -3,13 +3,13 @@ import { Prisma } from "../DB/dbConfig";
 import { generateRandomNum, getImageUrl, imageValidator } from "../utils/helper";
 import { newsBody } from "../validations/newsValidation"
 import redisCache from "../DB/redisConfig";
+import logger from "../config/logger";
 
 
 
 export const createNews = async (req:any, res:any) => {
         try {   
-            console.log("Request body:", req.body);
-            console.log("Request files:", req.files);
+          
              const body = req.body;
              const {success} = newsBody.safeParse(body)
 
@@ -71,7 +71,7 @@ export const createNews = async (req:any, res:any) => {
         }
 
         } catch (err) {
-            
+                logger.error(err)
         }
 }
 
