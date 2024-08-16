@@ -1,8 +1,8 @@
-import { getImageUrl } from "../src/utils/helper"
+import { getImageUrl } from "../utils/helper"
 
 
 
-export const newsTransform = (news:any) =>{
+ const newsTransform = (news:any) =>{
     return {
         id:news.id,
         heading: news.title,
@@ -16,3 +16,6 @@ export const newsTransform = (news:any) =>{
         }
     }
 }
+
+
+export default newsTransform;

@@ -1,4 +1,4 @@
-import { newsTransform } from "../../transform/newsTransform";
+import newsTransform from "../transform/newsTransform";
 import { Prisma } from "../DB/dbConfig";
 import { generateRandomNum, getImageUrl, imageValidator } from "../utils/helper";
 import { newsBody } from "../validations/newsValidation"
@@ -101,8 +101,8 @@ export const getNews = async (req:any, res:any) => {
 
 export const getAllNews = async (req:any, res:any) => {
     try {
-        const page = Number (req.query.page) || 1
-        const limit = Number(req.query.limit )|| 1
+        let page = Number (req.query.page) || 1
+        let limit = Number(req.query.limit )|| 1
 
             if(page <= 0 ){
                 page = 1
@@ -136,7 +136,7 @@ export const getAllNews = async (req:any, res:any) => {
             })),
             pagination: {
                 totalItems: total,
-                totalPages: Math.ceil(total / limit)
+                totalPages: Math.ceil(total / limit),
                 currentPage: page,
                 pageSize: limit,
             }
