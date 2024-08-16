@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 
 export const authMiddleware = ( req:any, res:any, next:any ) =>{
         const authHeader= req.headers.authorization
+        console.log("auth header is ",authHeader)
         if(!authHeader) {
             return res.status(401).json({  message:"User is not authentictaed" })
         }

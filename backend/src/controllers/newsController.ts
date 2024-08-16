@@ -2,11 +2,14 @@ import newsTransform from "../transform/newsTransform";
 import { Prisma } from "../DB/dbConfig";
 import { generateRandomNum, getImageUrl, imageValidator } from "../utils/helper";
 import { newsBody } from "../validations/newsValidation"
+import redisCache from "../DB/redisConfig";
 
 
 
 export const createNews = async (req:any, res:any) => {
         try {   
+            console.log("Request body:", req.body);
+            console.log("Request files:", req.files);
              const body = req.body;
              const {success} = newsBody.safeParse(body)
 
@@ -34,7 +37,8 @@ export const createNews = async (req:any, res:any) => {
         profile.mv(uploadPath , (err:any) => {
             console.log("image error:", err)
         })
-
+        console.log("Image is",title,"d", content)
+        console.log("Image is", profile)
         // insert news data into database
         try {
             const news = await Prisma.news.create({
@@ -45,6 +49,15 @@ export const createNews = async (req:any, res:any) => {
                     image: imageName
                 }
             });
+            // removing cache 
+            redisCache.del("/api/v1/news", (err:any) =>{
+                if(err) throw err;
+            }) 
+
+
+         
+
+
             return res.status(201).json({
                 message: "News created successfully",
                 news: news,
@@ -102,7 +115,7 @@ export const getNews = async (req:any, res:any) => {
 export const getAllNews = async (req:any, res:any) => {
     try {
         let page = Number (req.query.page) || 1
-        let limit = Number(req.query.limit )|| 1
+        let limit = Number(req.query.limit )|| 10
 
             if(page <= 0 ){
                 page = 1
