@@ -1,13 +1,12 @@
 import {Request, Response} from 'express'
 import { loginBody, registerBody } from '../validations/authValidations';
-import { any, ZodError } from 'zod';
+import {  ZodError } from 'zod';
 import { formatError } from '../helper';
 import bcrypt from 'bcrypt'
 import { Prisma } from '../DB/dbConfig';
 import { LoginInterface, RegisterInterface } from '../interfaces/authInterface';
 import jwt from 'jsonwebtoken'
-import errorMap from 'zod/lib/locales/en';
-import { sendEmail } from '../config/mailer';
+// import { sendEmail } from '../config/mailer';
 import logger from '../config/logger';
 import { emailQueue, emailQueueName } from '../jobs/SendEmail';
 

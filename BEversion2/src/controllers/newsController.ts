@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express"
 import redisCache from "../config/redisConfig";
 import { Prisma } from "../DB/dbConfig";
@@ -146,9 +147,7 @@ class NewsController {
                     },
                 });
         
-                // redisCache.del("/api/v1/news", (err: any) => {
-                //     if (err) logger.error("Cache deletion error:", err);
-                // });
+           
                 redisCache.del("/api/v1/news", (err:any) =>{
                     if(err) throw err;
                 }) 
@@ -174,13 +173,6 @@ class NewsController {
             const deletedNews = await Prisma.news.delete({
                 where: {id: Number(id) }
             })
-
-            // redisCache.del("/api/v1/news", (err:any) => {
-            //     if(err) logger.error("Cache deletion error::", err);
-            // });
-            // redisCache.del(`news:${id}`, (err: any) => {
-            //     if(err) logger.error("Cache deletion error ::", err);
-            // });
 
             return res.status(200).json({
                 message:"News deleted Succesffully",
@@ -212,7 +204,6 @@ class NewsController {
                     const profile = req.files.image;
                 
                     if (Array.isArray(profile)) {
-                        // Assert that `profile` is an array of `UploadedFile`
                         const firstProfile = profile[0] as any;
                         const validationMessage = imageValidator(firstProfile.size, firstProfile.mimetype);
                 
@@ -244,12 +235,6 @@ class NewsController {
                                     data: updates,
                                 });
                 
-                                // redisCache.del("/api/v1/news", (err: any) => {
-                                //     if (err) logger.error("Cache deletion error:", err);
-                                // });
-                                // redisCache.del(`news:${id}`, (err: any) => {
-                                //     if (err) logger.error("Cache deletion error:", err);
-                                // });
                 
                                 return res.status(200).json({
                                     message: "News updated successfully",
@@ -265,7 +250,6 @@ class NewsController {
                         });
                 
                     } else {
-                        // Assert that `profile` is a single `UploadedFile`
                         const profileFile = profile as any;
                         const validationMessage = imageValidator(profileFile.size, profileFile.mimetype);
                 
@@ -297,12 +281,6 @@ class NewsController {
                                     data: updates,
                                 });
                 
-                                // redisCache.del("/api/v1/news", (err: any) => {
-                                //     if (err) logger.error("Cache deletion error:", err);
-                                // });
-                                // redisCache.del(`news:${id}`, (err: any) => {
-                                //     if (err) logger.error("Cache deletion error:", err);
-                                // });
                 
                                 return res.status(200).json({
                                     message: "News updated successfully",
@@ -323,12 +301,7 @@ class NewsController {
                         data: updates,
                     });
                 
-                    // redisCache.del("/api/v1/news", (err: any) => {
-                    //     if (err) logger.error("Cache deletion error:", err);
-                    // });
-                    // redisCache.del(`news:${id}`, (err: any) => {
-                    //     if (err) logger.error("Cache deletion error:", err);
-                    // });
+        
                 
                     return res.status(200).json({
                         message: "News updated successfully",

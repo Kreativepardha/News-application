@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ZodError } from "zod";
 import {v4 as uuidv4} from 'uuid'
 
 
 
 export const formatError = (error: ZodError):any => {
+    // eslint-disable-next-line prefer-const
     let errors: any = {};
     error.errors?.map((issue) => {
         errors[issue.path?.[0]] = issue.message;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
 import { Prisma } from "../DB/dbConfig";
 import { generateRandomNum, getImageUrl, imageValidator } from "../helper";

@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { authRouter } from "./authRouter";
-import AuthController from "../controllers/AuthController";
 import { authLimiter } from "../config/ratelimiter";
 import { userRouter } from "./userRouter";
 import { isAuthenticated } from "../middlewares/authMiddleware";
@@ -13,7 +12,7 @@ const router =  Router()
 
 router.use("/auth",authLimiter ,authRouter)
 router.use("/user",isAuthenticated,userRouter)
-router.use("/news", newsRouter)
+router.use("/news", redisCache.route(),newsRouter)
 
 
 export {

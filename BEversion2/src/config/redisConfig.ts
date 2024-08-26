@@ -1,6 +1,7 @@
 import redis from 'express-redis-cache'
 
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const redisCache: any = redis({
     port:6444,
     host:"localhost",
@@ -8,21 +9,7 @@ const redisCache: any = redis({
     expire: 60 * 60
 })
 
-// redisCache.on('message', (message: string) => {
-//     console.log('Redis cache event:', message);
-//   });
-  
-//   redisCache.on('connected', () => {
-//     console.log('Connected to Redis');
-//   });
-  
-//   redisCache.on('disconnected', () => {
-//     console.log('Disconnected from Redis');
-//   });
-  
-//   redisCache.on('error', (err: Error) => {
-//     console.error('Redis connection error:', err);
-//   });
+
 
   
 export default redisCache
