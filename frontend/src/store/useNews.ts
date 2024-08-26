@@ -26,8 +26,18 @@ const useNewsStore = create<NewsState>((set) => ({
 
     fetchAllNews: async () => {
         try {
-            const response = await axios.get(`${BACKEND_URL}/news`)
-            set({ news: response.data.news, error: null})
+            const response = await axios.get(`${BACKEND_URL}/news`, {
+                headers:{
+                    'Content-Type': 'application/json',
+                    "Authorization": localStorage.getItem("token")
+                }
+            })
+            console.log(response.data)
+            if (Array.isArray(response.data.news)) {
+                set({ news: response.data.news, error: null });
+              } else {
+                set({ news: [], error: "Unexpected response format" });
+              }
         } catch (err) {
             set({ error: 'Failed to fetch News.'})
         } finally{
@@ -44,11 +54,11 @@ const useNewsStore = create<NewsState>((set) => ({
             formData.append('image', image)
             formData.append('userId', userId.toString())
         
-            await axios.post(`${BACKEND_URL}/news`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
+            await axios.post(`${BACKEND_URL}/news/`, formData, {
+                headers:{
+                    'Content-Type': 'application/json',
                     "Authorization": localStorage.getItem("token")
-                },
+                }
             });
             await useNewsStore.getState().fetchAllNews();
         } catch (err) {
@@ -66,9 +76,10 @@ const useNewsStore = create<NewsState>((set) => ({
             if(image) formData.append('image', image);
 
             await axios.put(`${BACKEND_URL}/news/${id}`, formData, {
-                headers: {
-                    'Content-Type' : 'multipart/form-data'
-                },
+                headers:{
+                    'Content-Type': 'application/json',
+                    "Authorization": localStorage.getItem("token")
+                }
             });
             await useNewsStore.getState().fetchAllNews();
         } catch (err) {

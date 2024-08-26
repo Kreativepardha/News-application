@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react"
 import useNewsStore from "../store/useNews"
 import useUserStore from "../store/useUserStore"
-
+import { News } from "../types/userTypes"
+import { format } from 'date-fns';
 
 
 export const NewsList = () => {
@@ -44,7 +45,7 @@ export const NewsList = () => {
     const handleDelete = async (id: number) => {
         await deleteNews(id)
     } 
-
+    // const formattedDate = format(new Date(newsItem.created_at), 'MMMM dd, yyyy hh:mm a');
     return (
         <div>
             <h1>NEws</h1>
@@ -53,17 +54,18 @@ export const NewsList = () => {
             <form onSubmit={handleCreateOrUpdate}>
                 <input type="text" placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <textarea placeholder="Content" value={content} onChange={(e) => setContent(e.target.value)} />
+                <input type="file" onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)} />
                     <button type="submit">
                         { editMode ? 'Update News' : 'Create News'  }
                     </button>
                 </form>
             <div className="">
-                {    news && news.length > 0 ? (
-
-                    news.map((newsItem) => (
-                        <div key={newsItem.id}>
-                            <h2> {newsItem.title}   </h2>
-                            <p>{newsItem.content} </p>
+                { news.length > 0 ? (
+                    news.map((newsItem: News, index: number) => (
+                        <div key={index}>
+                            <h2> {newsItem.heading}   </h2>
+                            <p>{newsItem.news} </p>
+                            <p>{format(new Date(newsItem.created_at), 'MMM dd, yyyy hh:mm a')} </p>
                             <img src={newsItem.image} alt={newsItem.title} />
                             <button onClick={() => handleEdit(newsItem.id, newsItem.title, newsItem.content)}>  Edit  </button>
                             <button onClick={() => handleDelete(newsItem.id)}> delete </button>

@@ -11,7 +11,7 @@ const router = express.Router()
 
 router.use("/auth", authRouter  )
 router.use("/user",authMiddleware, userRouter  )
-router.use("/news",  redisCache.route() ,authMiddleware,newsRouter )
+router.use("/news",  redisCache.route() ,newsRouter )
 
 export {
     router as mainRouter

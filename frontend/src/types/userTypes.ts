@@ -21,8 +21,9 @@ export interface UserRegister extends UserLogin {
 
 export interface News{
     id: number;
-    title: string;
-    content:string;
+    heading: string;
+    news:string;
     image?:string;
     userId: number;
+    created_at?: string;
 }
