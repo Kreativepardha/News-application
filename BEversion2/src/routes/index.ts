@@ -12,7 +12,7 @@ const router =  Router()
 
 router.use("/auth",authLimiter ,authRouter)
 router.use("/user",isAuthenticated,userRouter)
-router.use("/news", redisCache.route(),newsRouter)
+router.use("/news", redisCache.route(), isAuthenticated,newsRouter)
 
 
 export {

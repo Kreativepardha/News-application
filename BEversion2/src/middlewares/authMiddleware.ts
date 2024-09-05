@@ -6,7 +6,7 @@ import { JWT_SECRET } from '../controllers/AuthController';
 
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
-
+    console.log("AUHTHEADEr", authHeader)
     if(!authHeader) { return res.status(401).json({ message:"No Token provided"   })}
    
     const token = authHeader?.split(' ')[1];

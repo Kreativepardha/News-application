@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { NewsController } from "../controllers/newsController";
+import { isAuthenticated } from "../middlewares/authMiddleware";
 
 
 const router = Router()
 
-router.get("/",   NewsController.getAllNews)
+router.get("/" ,isAuthenticated ,NewsController.getAllNews)
 router.post("/",   NewsController.createNews)
 router.get("/:id", NewsController.getNews)
 router.get("/:id",NewsController.updateNews)

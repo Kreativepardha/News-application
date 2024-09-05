@@ -260,7 +260,6 @@ class NewsController {
                                 },
                             });
                         }
-                
                         const imgExt = profileFile.name.split(".").pop();
                         const imageName = `${generateRandomNum()}.${imgExt}`;
                         const uploadPath = `${process.cwd()}/public/images/${imageName}`;
